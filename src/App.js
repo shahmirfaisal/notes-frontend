@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { ThemeProvider, createMuiTheme, CssBaseline } from "@material-ui/core";
+import { Header } from "./components/Header/";
+import { Route, Switch, useHistory } from "react-router-dom";
+import { routes } from "./routes";
+import { NotificationContainer } from "react-notifications";
+import { setHistory } from "./utils";
+import { useDispatch, useSelector } from "react-redux";
+import { isLogin } from "./store/slices/userSlice";
 
-function App() {
+export const App = () => {
+  const theme = createMuiTheme({
+    typography: {
+      fontFamily: ["Spartan", "sans-serif"],
+    },
+  });
+
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.user.contentLoading);
+
+  useEffect(() => {
+    setHistory(history);
+    dispatch(isLogin());
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />{" "}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <Header />
+
+            <Switch>
+              {routes.map((route) => (
+                <Route {...route} />
+              ))}
+            </Switch>
+          </>
+        )}
+        <NotificationContainer />
+      </ThemeProvider>
     </div>
   );
-}
-
-export default App;
+};
