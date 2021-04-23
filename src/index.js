@@ -8,7 +8,7 @@ import { store } from "./store/index";
 import { Provider } from "react-redux";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.interceptors.request.use((config) => {
   config.headers.Authorization = localStorage.getItem("token");
   return config;
