@@ -26,7 +26,7 @@ export const Note = withAuth(true)((props) => {
 
   useEffect(() => {
     dispatch(fetchNote(id));
-    const socket = openSocket("http://localhost:3000/");
+    const socket = openSocket(process.env.REACT_APP_API_URL);
     setSocketIO(socket);
     socket.on("connected", () => console.log("Connected"));
   }, []);
