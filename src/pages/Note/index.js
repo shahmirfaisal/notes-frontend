@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Typography } from "@material-ui/core";
+import { Container, Typography, Button, Box } from "@material-ui/core";
 import { CreateOutlined } from "@material-ui/icons";
 import { useStyles } from "./style";
 import openSocket from "socket.io-client";
@@ -9,11 +9,12 @@ import {
   changeContent,
   toggleRenameNote,
 } from "../../store/slices/noteSlice";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { withAuth } from "../../hoc/withAuth";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 import { RenameNote } from "../../components/RenameNote/";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 export const Note = withAuth(true)((props) => {
   const classes = useStyles();
@@ -23,6 +24,7 @@ export const Note = withAuth(true)((props) => {
   const { id } = useParams();
   const [socketIO, setSocketIO] = useState(null);
   const [saveLoading, setSaveLoading] = useState(false);
+  const { push } = useHistory();
 
   useEffect(() => {
     dispatch(fetchNote(id));
@@ -46,6 +48,15 @@ export const Note = withAuth(true)((props) => {
         <Typography>Loading...</Typography>
       ) : (
         <>
+          <Box marginTop={5}></Box>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<KeyboardBackspaceIcon />}
+            onClick={() => push("/")}
+          >
+            Go to home
+          </Button>
           <div className={classes.header}>
             <Typography variant="h4">
               {note?.name}{" "}
